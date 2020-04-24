@@ -24,6 +24,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.view.View;
 
+import com.qmuiteam.qmui.skin.QMUISkinManager;
 import com.qmuiteam.qmui.span.QMUIBlockSpaceSpan;
 import com.qmuiteam.qmui.span.QMUITouchableSpan;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
@@ -53,6 +54,7 @@ public class UpgradeTipTask implements UpgradeTask {
         String title = String.format(activity.getString(R.string.app_upgrade_tip_title), QMUIPackageHelper.getAppVersion(activity));
         CharSequence message = getUpgradeWord(activity);
         new QMUIDialog.MessageDialogBuilder(activity)
+                .setSkinManager(QMUISkinManager.defaultInstance(activity))
                 .setTitle(title)
                 .setMessage(message)
                 .create(R.style.ReleaseDialogTheme)
@@ -68,7 +70,21 @@ public class UpgradeTipTask implements UpgradeTask {
 
     public CharSequence getUpgradeWord(final Activity activity) {
         SpannableStringBuilder text = new SpannableStringBuilder();
-        if(mNewVersion == QDUpgradeManager.VERSION_2_0_0_alpha2){
+        if(mNewVersion == QDUpgradeManager.VERSION_2_0_0_alpha7){
+            text.append("1. Add OnProgressChangeListener for QMUIProgressBar.\n");
+            text.append("2. Add skin support for CompoundButton.\n");
+            text.append("3. Some bug fixes.");
+        }else if(mNewVersion == QDUpgradeManager.VERSION_2_0_0_alpha6){
+            text.append("1. Features: Add new widget QMUITabSegment2 to support ViewPager2.\n");
+            text.append("2. Remove the skin's default usage.\n");
+            text.append("3. QMUILayout support radius which is half of the view height or width.\n");
+            text.append("4. Some bug fixes.");
+        }else if(mNewVersion == QDUpgradeManager.VERSION_2_0_0_alpha4){
+            text.append("1. Features: Add new widget: QMUIPullLayout.\n");
+            text.append("2. Features: Add new widget: QMUIRVItemSwipeAction.\n");
+            text.append("3. Support muti instance for QMUISkinManager.\n");
+            text.append("4. some bug fixes.");
+        }else if(mNewVersion == QDUpgradeManager.VERSION_2_0_0_alpha2){
             text.append("1. Bugfix: Crash Happened on Android 7 and lower.\n");
             text.append("2. Bugfix: QMUIBottomSheet overlapped the navigation bar.");
         }else if(mNewVersion == QDUpgradeManager.VERSION_2_0_0_alpha1){

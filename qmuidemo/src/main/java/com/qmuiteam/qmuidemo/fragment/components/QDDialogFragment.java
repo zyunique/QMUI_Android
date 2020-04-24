@@ -31,6 +31,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.qmuiteam.qmui.skin.QMUISkinManager;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.util.QMUIKeyboardHelper;
 import com.qmuiteam.qmui.util.QMUIResHelper;
@@ -49,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 import butterknife.BindView;
@@ -161,6 +163,7 @@ public class QDDialogFragment extends BaseFragment {
         new QMUIDialog.MessageDialogBuilder(getActivity())
                 .setTitle("标题")
                 .setMessage("确定要发送吗？")
+                .setSkinManager(QMUISkinManager.defaultInstance(getContext()))
                 .addAction("取消", new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
@@ -181,6 +184,7 @@ public class QDDialogFragment extends BaseFragment {
         new QMUIDialog.MessageDialogBuilder(getActivity())
                 .setTitle("标题")
                 .setMessage("确定要删除吗？")
+                .setSkinManager(QMUISkinManager.defaultInstance(getContext()))
                 .addAction("取消", new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
@@ -200,6 +204,7 @@ public class QDDialogFragment extends BaseFragment {
     private void showLongMessageDialog() {
         new QMUIDialog.MessageDialogBuilder(getActivity())
                 .setTitle("标题")
+                .setSkinManager(QMUISkinManager.defaultInstance(getContext()))
                 .setMessage("这是一段很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长" +
                         "很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很" +
                         "很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很长很" +
@@ -225,6 +230,7 @@ public class QDDialogFragment extends BaseFragment {
                 .setTitle("退出后是否删除账号信息?")
                 .setMessage("删除账号信息")
                 .setChecked(true)
+                .setSkinManager(QMUISkinManager.defaultInstance(getContext()))
                 .addAction("取消", new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
@@ -243,6 +249,7 @@ public class QDDialogFragment extends BaseFragment {
     private void showMenuDialog() {
         final String[] items = new String[]{"选项1", "选项2", "选项3"};
         new QMUIDialog.MenuDialogBuilder(getActivity())
+                .setSkinManager(QMUISkinManager.defaultInstance(getContext()))
                 .addItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -258,6 +265,7 @@ public class QDDialogFragment extends BaseFragment {
         final int checkedIndex = 1;
         new QMUIDialog.CheckableDialogBuilder(getActivity())
                 .setCheckedIndex(checkedIndex)
+                .setSkinManager(QMUISkinManager.defaultInstance(getContext()))
                 .addItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -272,6 +280,7 @@ public class QDDialogFragment extends BaseFragment {
         final String[] items = new String[]{"选项1", "选项2", "选项3", "选项4", "选项5", "选项6"};
         final QMUIDialog.MultiCheckableDialogBuilder builder = new QMUIDialog.MultiCheckableDialogBuilder(getActivity())
                 .setCheckedItems(new int[]{1, 3})
+                .setSkinManager(QMUISkinManager.defaultInstance(getContext()))
                 .addItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -306,6 +315,7 @@ public class QDDialogFragment extends BaseFragment {
         };
         final QMUIDialog.MultiCheckableDialogBuilder builder = new QMUIDialog.MultiCheckableDialogBuilder(getActivity())
                 .setCheckedItems(new int[]{1, 3})
+                .setSkinManager(QMUISkinManager.defaultInstance(getContext()))
                 .addItems(items, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -335,6 +345,7 @@ public class QDDialogFragment extends BaseFragment {
     private void showEditTextDialog() {
         final QMUIDialog.EditTextDialogBuilder builder = new QMUIDialog.EditTextDialogBuilder(getActivity());
         builder.setTitle("标题")
+                .setSkinManager(QMUISkinManager.defaultInstance(getContext()))
                 .setPlaceholder("在此输入您的昵称")
                 .setInputType(InputType.TYPE_CLASS_TEXT)
                 .addAction("取消", new QMUIDialogAction.ActionListener() {
@@ -360,6 +371,7 @@ public class QDDialogFragment extends BaseFragment {
 
     private void showAutoDialog() {
         QMAutoTestDialogBuilder autoTestDialogBuilder = (QMAutoTestDialogBuilder) new QMAutoTestDialogBuilder(getActivity())
+                .setSkinManager(QMUISkinManager.defaultInstance(getContext()))
                 .addAction("取消", new QMUIDialogAction.ActionListener() {
                     @Override
                     public void onClick(QMUIDialog dialog, int index) {
@@ -378,12 +390,10 @@ public class QDDialogFragment extends BaseFragment {
     }
 
     class QMAutoTestDialogBuilder extends QMUIDialog.AutoResizeDialogBuilder {
-        private Context mContext;
         private EditText mEditText;
 
         public QMAutoTestDialogBuilder(Context context) {
             super(context);
-            mContext = context;
         }
 
         public EditText getEditText() {
@@ -391,20 +401,20 @@ public class QDDialogFragment extends BaseFragment {
         }
 
         @Override
-        public View onBuildContent(QMUIDialog dialog) {
-            LinearLayout layout = new LinearLayout(mContext);
+        public View onBuildContent(@NonNull QMUIDialog dialog, @NonNull Context context) {
+            LinearLayout layout = new LinearLayout(context);
             layout.setOrientation(LinearLayout.VERTICAL);
             layout.setLayoutParams(new ScrollView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            int padding = QMUIDisplayHelper.dp2px(mContext, 20);
+            int padding = QMUIDisplayHelper.dp2px(context, 20);
             layout.setPadding(padding, padding, padding, padding);
-            mEditText = new AppCompatEditText(mContext);
-            QMUIViewHelper.setBackgroundKeepingPadding(mEditText, QMUIResHelper.getAttrDrawable(mContext, R.drawable.qmui_divider_bottom_bitmap));
+            mEditText = new AppCompatEditText(context);
+            QMUIViewHelper.setBackgroundKeepingPadding(mEditText, QMUIResHelper.getAttrDrawable(context, R.drawable.qmui_divider_bottom_bitmap));
             mEditText.setHint("输入框");
             LinearLayout.LayoutParams editTextLP = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, QMUIDisplayHelper.dpToPx(50));
             editTextLP.bottomMargin = QMUIDisplayHelper.dp2px(getContext(), 15);
             mEditText.setLayoutParams(editTextLP);
             layout.addView(mEditText);
-            TextView textView = new TextView(mContext);
+            TextView textView = new TextView(context);
             textView.setLineSpacing(QMUIDisplayHelper.dp2px(getContext(), 4), 1.0f);
             textView.setText("观察聚焦输入框后，键盘升起降下时 dialog 的高度自适应变化。\n\n" +
                     "QMUI Android 的设计目的是用于辅助快速搭建一个具备基本设计还原效果的 Android 项目，" +
@@ -422,6 +432,7 @@ public class QDDialogFragment extends BaseFragment {
         new QMUIBottomSheet.BottomListSheetBuilder(getContext())
                 .addItem("使用 QMUI 默认 Dialog 样式")
                 .addItem("自定义样式")
+                .setSkinManager(QMUISkinManager.defaultInstance(getContext()))
                 .setOnSheetItemClickListener(new QMUIBottomSheet.BottomListSheetBuilder.OnSheetItemClickListener() {
                     @Override
                     public void onClick(QMUIBottomSheet dialog, View itemView, int position, String tag) {

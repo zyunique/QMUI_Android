@@ -54,11 +54,6 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-/**
- * @author cginechen
- * @date 2017-04-28
- */
-
 @Widget(group = Group.Other, name = "内容自适应，超过父容器则滚动")
 public class QDTabSegmentScrollableModeFragment extends BaseFragment {
     @SuppressWarnings("FieldCanBeLocal") private final int TAB_COUNT = 10;

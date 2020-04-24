@@ -30,6 +30,8 @@ import com.qmuiteam.qmui.util.QMUIResHelper;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
+
 public class QMUIBottomSheetListItemDecoration extends RecyclerView.ItemDecoration
         implements IQMUISkinHandlerDecoration {
 
@@ -40,9 +42,7 @@ public class QMUIBottomSheetListItemDecoration extends RecyclerView.ItemDecorati
         mSeparatorPaint = new Paint();
         mSeparatorPaint.setStrokeWidth(1);
         mSeparatorPaint.setStyle(Paint.Style.STROKE);
-        String attrName = QMUIResHelper.getAttrString(
-                context, R.attr.qmui_skin_def_bottom_sheet_separator_color);
-        mSeparatorAttr = QMUISkinManager.defaultInstance(context).getAttrFromName(attrName);
+        mSeparatorAttr = R.attr.qmui_skin_support_bottom_sheet_separator_color;
         if (mSeparatorAttr != 0) {
             mSeparatorPaint.setColor(QMUIResHelper.getAttrColor(context, mSeparatorAttr));
         }
@@ -75,10 +75,10 @@ public class QMUIBottomSheetListItemDecoration extends RecyclerView.ItemDecorati
     }
 
     @Override
-    public void handle(RecyclerView recyclerView,
-                       QMUISkinManager manager,
+    public void handle(@NotNull RecyclerView recyclerView,
+                       @NotNull QMUISkinManager manager,
                        int skinIndex,
-                       Resources.Theme theme) {
+                       @NotNull Resources.Theme theme) {
         if (mSeparatorAttr != 0) {
             mSeparatorPaint.setColor(QMUIResHelper.getAttrColor(theme, mSeparatorAttr));
         }

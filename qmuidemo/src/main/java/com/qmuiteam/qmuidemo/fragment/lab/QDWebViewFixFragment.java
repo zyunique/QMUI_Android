@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebChromeClient;
 
+import com.qmuiteam.qmui.skin.QMUISkinManager;
 import com.qmuiteam.qmui.util.QMUIDisplayHelper;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
 import com.qmuiteam.qmui.widget.dialog.QMUIDialogAction;
@@ -30,7 +31,7 @@ import com.qmuiteam.qmuidemo.fragment.QDWebExplorerFragment;
 import com.qmuiteam.qmuidemo.lib.Group;
 import com.qmuiteam.qmuidemo.lib.annotation.Widget;
 
-@Widget(group = Group.Lab, widgetClass = QMUIWebView.class, iconRes = R.mipmap.icon_grid_webview)
+@Widget(group = Group.Other, name = "修复 css-env-safe-area-inset")
 public class QDWebViewFixFragment extends QDWebExplorerFragment {
 
     public QDWebViewFixFragment() {
@@ -61,6 +62,7 @@ public class QDWebViewFixFragment extends QDWebExplorerFragment {
                                 dialog.dismiss();
                             }
                         }))
+                        .setSkinManager(QMUISkinManager.defaultInstance(getContext()))
                         .show();
             }
         });

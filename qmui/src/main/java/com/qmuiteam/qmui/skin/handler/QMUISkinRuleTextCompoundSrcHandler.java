@@ -4,11 +4,14 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.TextView;
 
+import com.qmuiteam.qmui.skin.QMUISkinHelper;
 import com.qmuiteam.qmui.skin.QMUISkinValueBuilder;
+
+import org.jetbrains.annotations.NotNull;
 
 public class QMUISkinRuleTextCompoundSrcHandler extends QMUISkinRuleDrawableHandler {
     @Override
-    void handle(View view, String name, Drawable drawable) {
+    protected void handle(@NotNull View view, @NotNull String name, Drawable drawable) {
         if (view instanceof TextView) {
             TextView tv = (TextView) view;
             if (drawable != null) {
@@ -25,7 +28,8 @@ public class QMUISkinRuleTextCompoundSrcHandler extends QMUISkinRuleDrawableHand
                 drawables[3] = drawable;
             }
             tv.setCompoundDrawables(drawables[0], drawables[1], drawables[2], drawables[3]);
+        }else{
+            QMUISkinHelper.warnRuleNotSupport(view, name);
         }
-
     }
 }

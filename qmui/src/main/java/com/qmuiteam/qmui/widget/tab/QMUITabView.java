@@ -44,9 +44,12 @@ import com.qmuiteam.qmui.util.QMUIResHelper;
 import com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.collection.SimpleArrayMap;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
+
+import org.jetbrains.annotations.NotNull;
 
 public class QMUITabView extends FrameLayout implements IQMUISkinHandlerView {
     private static final String TAG = "QMUITabView";
@@ -134,6 +137,9 @@ public class QMUITabView extends FrameLayout implements IQMUISkinHandlerView {
         mCollapsingTextHelper.setGravity(gravity, gravity, false);
         mCollapsingTextHelper.setText(tab.getText());
         mTab = tab;
+        if(tab.tabIcon != null){
+            tab.tabIcon.setCallback(this);
+        }
         boolean hasRedPoint = mTab.signCount == QMUITab.RED_POINT_SIGN_COUNT;
         boolean hasSignCount = mTab.signCount > 0;
         if (hasRedPoint || hasSignCount) {
@@ -144,14 +150,13 @@ public class QMUITabView extends FrameLayout implements IQMUISkinHandlerView {
                 mSignCountView.setText(
                         QMUILangHelper.formatNumberToLimitedDigits(mTab.signCount, mTab.signCountDigits));
                 mSignCountView.setMinWidth(QMUIResHelper.getAttrDimen(getContext(),
-                        R.attr.qmui_tab_sign_count_view_minSize_with_text));
-                signCountLp.width = LayoutParams.WRAP_CONTENT;
+                        R.attr.qmui_tab_sign_count_view_min_size_with_text));
                 signCountLp.height = QMUIResHelper.getAttrDimen(getContext(),
-                        R.attr.qmui_tab_sign_count_view_minSize_with_text);
+                        R.attr.qmui_tab_sign_count_view_min_size_with_text);
             } else {
                 mSignCountView.setText(null);
                 int redPointSize = QMUIResHelper.getAttrDimen(getContext(),
-                        R.attr.qmui_tab_sign_count_view_minSize);
+                        R.attr.qmui_tab_sign_count_view_min_size);
                 signCountLp.width = redPointSize;
                 signCountLp.height = redPointSize;
             }
@@ -171,9 +176,8 @@ public class QMUITabView extends FrameLayout implements IQMUISkinHandlerView {
         QMUITabIcon tabIcon = mTab.getTabIcon();
         if (tabIcon != null) {
             tabIcon.setSelectFraction(fraction,
-                    QMUIColorHelper.computeColor(
-                            QMUISkinHelper.getSkinColor(this, mTab.normalColorAttr),
-                            QMUISkinHelper.getSkinColor(this, mTab.selectedColorAttr), fraction));
+                    QMUIColorHelper.computeColor(mTab.getNormalColor(this),
+                            mTab.getSelectColor(this), fraction));
         }
         updateCurrentInfo(fraction);
         mCollapsingTextHelper.setExpansionFraction(1 - fraction);
@@ -308,6 +312,11 @@ public class QMUITabView extends FrameLayout implements IQMUISkinHandlerView {
                         mTab.getIconTextGap() +
                         mTab.getNormalTabIconWidth() * mTab.getSelectedTabIconScale());
             }
+            if(mSignCountView != null && mSignCountView.getVisibility() != View.GONE){
+                mSignCountView.measure(0, 0);
+                widthSize = Math.max(widthSize,
+                        widthSize + mSignCountView.getMeasuredWidth() + mTab.signCountLeftMarginWithIconOrText);
+            }
             useWidthMeasureSpec = MeasureSpec.makeMeasureSpec(widthSize, MeasureSpec.EXACTLY);
         }
         if (heightMode == MeasureSpec.AT_MOST) {
@@ -382,7 +391,15 @@ public class QMUITabView extends FrameLayout implements IQMUISkinHandlerView {
             bottom = (int) (mCurrentIconTop);
         }
         Point point = new Point(left, bottom);
-        point.offset(mTab.signCountLeftMarginWithIconOrText, mTab.signCountBottomMarginWithIconOrText);
+        int verticalOffset = mTab.signCountBottomMarginWithIconOrText;
+        if(verticalOffset == QMUITab.SIGN_COUNT_VIEW_LAYOUT_VERTICAL_CENTER && mSignCountView != null){
+            point.y = getMeasuredHeight() - (getMeasuredHeight() - mSignCountView.getMeasuredHeight()) / 2;
+            point.offset(mTab.signCountLeftMarginWithIconOrText, 0);
+        }else{
+            point.offset(mTab.signCountLeftMarginWithIconOrText, verticalOffset);
+        }
+
+
         return point;
     }
 
@@ -640,6 +657,11 @@ public class QMUITabView extends FrameLayout implements IQMUISkinHandlerView {
     }
 
     @Override
+    public void invalidateDrawable(@NonNull Drawable drawable) {
+        invalidate();
+    }
+
+    @Override
     public final void draw(Canvas canvas) {
         onDrawTab(canvas);
         super.draw(canvas);
@@ -665,7 +687,7 @@ public class QMUITabView extends FrameLayout implements IQMUISkinHandlerView {
     }
 
     @Override
-    public void handle(QMUISkinManager manager, int skinIndex, Resources.Theme theme, SimpleArrayMap<String, Integer> attrs) {
+    public void handle(@NotNull QMUISkinManager manager, int skinIndex, @NotNull Resources.Theme theme, @Nullable SimpleArrayMap<String, Integer> attrs) {
         if (mTab != null) {
             updateSkinInfo(mTab);
             invalidate();
@@ -673,8 +695,8 @@ public class QMUITabView extends FrameLayout implements IQMUISkinHandlerView {
     }
 
     private void updateSkinInfo(QMUITab tab) {
-        int normalColor = QMUISkinHelper.getSkinColor(this, tab.normalColorAttr);
-        int selectedColor = QMUISkinHelper.getSkinColor(this, tab.selectedColorAttr);
+        int normalColor = tab.getNormalColor(this);
+        int selectedColor = tab.getSelectColor(this);
         mCollapsingTextHelper.setTextColor(
                 ColorStateList.valueOf(normalColor),
                 ColorStateList.valueOf(selectedColor),

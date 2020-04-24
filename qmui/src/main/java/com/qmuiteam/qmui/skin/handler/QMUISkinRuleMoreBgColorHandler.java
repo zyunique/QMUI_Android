@@ -19,13 +19,18 @@ import android.content.res.ColorStateList;
 import android.view.View;
 
 import com.qmuiteam.qmui.qqface.QMUIQQFaceView;
+import com.qmuiteam.qmui.skin.QMUISkinHelper;
+
+import org.jetbrains.annotations.NotNull;
 
 public class QMUISkinRuleMoreBgColorHandler extends QMUISkinRuleColorStateListHandler {
 
     @Override
-    void handle(View view, String name, ColorStateList colorStateList) {
+    protected void handle(@NotNull View view, @NotNull String name, ColorStateList colorStateList) {
         if (view instanceof QMUIQQFaceView) {
             ((QMUIQQFaceView) view).setMoreActionBgColor(colorStateList);
+        }else{
+            QMUISkinHelper.warnRuleNotSupport(view, name);
         }
     }
 }

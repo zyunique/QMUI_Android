@@ -32,6 +32,7 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.ZoomButtonsController;
 
+import com.qmuiteam.qmui.skin.QMUISkinManager;
 import com.qmuiteam.qmui.util.QMUILangHelper;
 import com.qmuiteam.qmui.util.QMUIResHelper;
 import com.qmuiteam.qmui.widget.QMUITopBarLayout;
@@ -67,7 +68,7 @@ public class QDWebExplorerFragment extends BaseFragment {
     @BindView(R.id.topbar) protected QMUITopBarLayout mTopBarLayout;
     @BindView(R.id.webview_container) QMUIWebViewContainer mWebViewContainer;
     @BindView(R.id.progress_bar) ProgressBar mProgressBar;
-    private QDWebView mWebView;
+    protected QDWebView mWebView;
 
 
     private String mUrl;
@@ -156,6 +157,7 @@ public class QDWebExplorerFragment extends BaseFragment {
                                     popBackStack();
                                 }
                             })
+                            .setSkinManager(QMUISkinManager.defaultInstance(getContext()))
                             .show();
                 } else {
                     doDownload(url);
